@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <title>Online HTML Editor</title>
+    <style>
+        :root {
+            --color: #000000;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        * {
+            margin: 0vh;
+            padding: 0vh;
+            outline: none;
+            box-sizing: border-box;
+            scrollbar-width: none;
+        }
+
+        html {
+            font-family: "Arial", "Sans-serif";
+            font-size: 0.99vh;
+        }
+
+        body {
+            width: 100%;
+            height: 99vh;
+        }
+        
+        p {
+            overflow-wrap: break-word;
+        }
+
+        input[type='color'] {
+            width: 100%;
+        }
+        
+        #orient {
+            visibility: hidden;
+        }
+
+        #loading {
+            visibility: hidden;
+        }
+        
+        #loading div {
+            border: 1.5vmin solid #eeeeee;
+            border-top: 1.5vmin solid var(--color);
+            border-radius: 50%;
+            width: 7vmin;
+            height: 7vmin;
+            animation: spin 1s linear infinite;
+        }
+        
+        #aiLoading {
+            visibility: hidden;
+        }
+        
+        #aiLoading div {
+            border: 1.5vmin solid #eeeeee;
+            border-top: 1.5vmin solid var(--color);
+            border-radius: 50%;
+            width: 7vmin;
+            height: 7vmin;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (orientation: portrait) {
+            #orient {
+                visibility: visible;
+            }
+        }
+
+    </style>
+</head>
+
+<body data-grid="10-90 100 0-0">
+    <div data-place="1-2 1-2" data-colors="var(--color) #ffffff" data-edge="0   3" data-flex="r sb-c 2">
+        <div data-flex="r sb-t" style="flex-grow: 1;">
+            <p data-font="5 400  l">KeywordQB</p>
+            <button id="KeyButton" data-edge="0 0.5 1 1.3 white" data-colors="var(--color)" data-font="1.8 700 #ffffff c" data-hover="  white var(--color)" data-active="  var(--color) white">Key</button>
+        </div>
+        <p id="RulesButton" data-font="5 400  l" data-hover="   black" data-active="   white">☰</p>
+    </div>
+    <div id="KeywordQB" data-place="2-3 1-2" data-grid="11-11-78 70-30">
+        <div data-place="1-2 1-2" data-grid=" 79-19 2" data-edge="1 1 2 1.5">
+            <input id="TypeAnswer" data-edge="0 0.2 0.6 0.1 black" data-focus="0.4" data-font="2 black  c">
+            <button id="SubmitAnswer" data-colors="var(--color) white" data-edge="0 0.3 1 0" data-hover="  white var(--color)" data-active="  var(--color) white" data-font="2 400 white c">Next</button>
+        </div>
+        <div data-place="2-3 1-2" data-grid=" 79-19 2" data-edge="1 1 2 1.5">
+            <div data-flex="r c-c 1">
+                <p id="score1" data-font="1.8" data-flex="r c-c 0">0/0/0</p>
+                <p id="score2" data-font="1.8" data-flex="r c-c 0">(0 seen),</p>
+                <p id="score3" data-font="1.8" data-flex="r c-c 0">0 pts,</p>
+                <p id="score4" data-font="1.8" data-flex="r c-c 0">celerity 0.000</p>
+            </div>
+            <button id="ResetButton" data-colors="var(--color) white" data-edge="0 0.3 1 0" data-hover="  white var(--color)" data-active="  var(--color) white" data-font="2 400 white c">Reset</button>
+        </div>
+        <div data-place="3-4 1-2" data-edge="1 1 2 1.5" data-grid="90-6 100 4">
+            <div data-flex="c s-t 3">
+                <p id="CategoryDisplay" data-edge="0 0.3 0.6 0.5" data-font="2 400 black c" data-colors="white">Welcome to KeywordQB!</p>
+                <p id="QuestionDisplay" data-font="2 400  l" data-colors="white">
+                  Thank you for exploring KeywordQB! This website is an extension of QB Reader that allows the user to practice QuizBowl while limiting the questions to containing specific topics and/or answerlines. Follow the instructions below to get started:<br><br>
+
+If you’re ever unsure, simply click the menu icon in the top right corner of the screen. A rules and settings menu will appear. Click the icon again to close it. Within this panel, you can adjust the website color and reading speed to suit your preferences.<br><br>
+
+To customize the difficulty levels and categories, click the checkboxes next to the options you’d like to play. A filled-in box indicates your selection. If none are checked, all difficulty levels and categories will be used by default.<br><br>
+
+When you click the "Next" button, a question will begin to read after the page has finished loading. When you feel confident about an answer, press the space bar or the "Buzz" button and type your answer. After typing your response, press Enter or click the "Submit" button. The correct answer will then be revealed. If you believe you were incorrectly penalized or rewarded, use the "I Was Right" or "I Was Wrong" button to adjust your score accordingly.<br><br>
+
+To customize the topics you would like to use, click on the "Key" button in the top right. Enter the specific keywords representing the topics you would like to practice in a comma-separated list using the following format:<br>
+- Append a question mark to the beginning of the word if you only want the question to contain the keyword (e.g. "?Water")<br>
+- Append an asterisk to the beginning of the word if you only want the answer to contain the keyword (e.g. "*Water")<br>
+- Type the word as-is if you want either the question or the answer to contain the keyword (e.g. "Water")<br>
+Please note that typing zero keywords will allow for any question from the provided difficulties and categories to be selected.<br><br>
+
+Here are some useful keyboard shortcuts:<br>
+- Press the space bar to buzz while the question is reading or after it is finished and before the answer is revealed<br>
+- Press "Enter" to submit an answer after buzzing in<br>
+- Press "N" to go to the next question after the question has finished reading and the answer has been revealed<br>
+- Press "R" to trigger the "I Was Right"/"I Was Wrong" button after the question has finished reading and the answer has been revealed<br>
+- Press "R" to reveal the answer after the question has finished reading before the answer is revealed<br>
+- Press "S" to skip the question while the question is reading or after the question has finished reading before the answer is revealed<br>
+- Press "P" to pause/resume the question while the question is reading<br><br>
+
+Once you’re ready to move on, simply click "Next" again. Enjoy your experience!
+                </p>
+                <p id="AnswerDisplay" data-font="2 700  l" data-colors="white" data-edge="0 0.3 0.6 1">Click on the "Next" button to get started!</p>
+            </div>
+            <div data-grid="100 49-49 2">
+                <button id="RevealButton" data-colors="var(--color) white" data-edge="0 0.3 1 0" data-hover="  white var(--color)" data-active="  var(--color) white" data-font="2 400 white c">Reveal</button>
+                <button id="IWasRightButton" data-colors="var(--color) white" data-edge="0 0.3 1 0" data-hover="  white var(--color)" data-active="  var(--color) white" data-font="2 400 white c">I Was Right</button>
+            </div>
+        </div>
+        <div id="loading" data-place="3-4 1-2" data-edge="1 1 2 1.5" data-flex=" c-c " data-colors="white white">
+                <div></div>
+            </div>
+        <div data-place="1-4 2-3" data-edge="1 1 2 1.5" data-flex="c s-t 2">
+            <p data-font="4 700  l">Difficulties:</p>
+            <div id="diff0" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Trash (0)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff1" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Middle School (1)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff2" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Easy High School (2)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff3" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Regular High School (3)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff4" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Hard High School (4)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff5" data-flex="r sb-c 5">
+                <p data-font="2 400  l">National High School (5)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff6" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Easy College (6)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff7" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Medium College (7)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff8" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Regionals College (8)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff9" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Nationals College (9)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="diff10" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Open (10)</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div data-edge="0 0.3"></div>
+            <p data-font="4 700  l">Categories:</p>
+            <div id="cat1" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Literature</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat2" data-flex="r sb-c 5">
+                <p data-font="2 400  l">History</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat3" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Science</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat4" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Fine Arts</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat5" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Religion</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat6" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Mythology</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat7" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Philosophy</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat8" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Social Science</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat9" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Current Events</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat10" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Geography</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat11" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Other Academic</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+            <div id="cat12" data-flex="r sb-c 5">
+                <p data-font="2 400  l">Trash</p>
+                <div data-state="off" data-font="2 400 white l" data-colors="white" data-edge="0 0.2 0.4 0" data-hover="  var(--color) var(--color)" data-active="  white white">&nbsp&nbsp&nbsp&nbsp</div>
+            </div>
+        </div>
+    </div>
+    <div id="RulesModal" data-place="2-3 1-2" data-colors="rgba(0,0,0,0.8) white" data-edge="0 0 0 15" data-grid="100 100 0" style="visibility: hidden; z-index: 100;">
+        <div data-edge="1 1 2 3" data-colors="white" data-flex="c s-t 3">
+            <p data-font="3 700  l">Settings:</p>
+            <div data-grid="100 90-10">
+                <p data-font="2.5 400  l">Color (website theme): </p>
+                <input data-place="1-2 2-3 t-t" data-edge="0 0.3 0.5 0" data-colors="white" type="color">
+            </div>
+            <div data-grid="100 90-10">
+                <p data-font="2.5 400  l">Speed (words per second): </p>
+                <input data-place="1-2 2-3 t-t" data-edge="0 0.3 0.5 0.25" data-colors="white" type="number" data-font="2 400  l">
+            </div>
+            <p data-font="3 700  l">Rules:</p>
+            <p data-font="2 400  l">
+            Thank you for exploring KeywordQB! This website is an extension of QB Reader that allows the user to practice QuizBowl while limiting the questions to containing specific topics and/or answerlines. Follow the instructions below to get started:<br><br>
+
+To customize the difficulty levels and categories, click the checkboxes next to the options you’d like to play. A filled-in box indicates your selection. If none are checked, all difficulty levels and categories will be used by default.<br><br>
+
+When you click the "Next" button, a question will begin to read after the page has finished loading. When you feel confident about an answer, press the space bar or the "Buzz" button and type your answer. After typing your response, press Enter or click the "Submit" button. The correct answer will then be revealed. If you believe you were incorrectly penalized or rewarded, use the "I Was Right" or "I Was Wrong" button to adjust your score accordingly.<br><br>
+
+To customize the topics you would like to use, click on the "Key" button in the top right. Enter the specific keywords representing the topics you would like to practice in a comma-separated list using the following format:<br>
+- Append a question mark to the beginning of the word if you only want the question to contain the keyword (e.g. "?Water")<br>
+- Append an asterisk to the beginning of the word if you only want the answer to contain the keyword (e.g. "*Water")<br>
+- Type the word as-is if you want either the question or the answer to contain the keyword (e.g. "Water")<br>
+Please note that typing zero keywords will allow for any question from the provided difficulties and categories to be selected.<br><br>
+
+Here are some useful keyboard shortcuts:<br>
+- Press the space bar to buzz while the question is reading or after it is finished and before the answer is revealed<br>
+- Press "Enter" to submit an answer after buzzing in<br>
+- Press "N" to go to the next question after the question has finished reading and the answer has been revealed<br>
+- Press "R" to trigger the "I Was Right"/"I Was Wrong" button after the question has finished reading and the answer has been revealed<br>
+- Press "R" to reveal the answer after the question has finished reading before the answer is revealed<br>
+- Press "S" to skip the question while the question is reading or after the question has finished reading before the answer is revealed<br>
+- Press "P" to pause/resume the question while the question is reading<br><br>
+
+Once you’re ready to move on, simply click "Next" again. Enjoy your experience!  
+            </p>
+        </div>
+    </div>
+    <div id="KeyModal" data-place="2-3 1-2" data-colors="rgba(0,0,0,0.8) white" data-edge="0 0 0 15" data-grid="100 100 0" style="visibility: hidden; z-index: 50;">
+        <div data-edge="1 1 2 3" data-colors="white" data-grid="10" data-place="1-2 1-2">
+            <p data-font="3 700  l">Keywords:</p>
+            <textarea id="KeywordInput" data-edge="0 0.2 0.4 1" data-focus="0.4" style="resize: none;"></textarea>
+        </div>
+    </div>
+    <div id="orient" data-place="2-3 1-2" data-colors="rgba(0,0,0,0.8) white"data-edge="0 0 0" data-grid="100 100 0" style="z-index: 200;">
+        <div data-edge="1 1 2 3" data-colors="white" data-flex="c c-c 3">
+            <p data-font="3 400 #b30000 c">This website does not support portrait mode.  Please switch to landscape mode and try again.</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("[data-grid]").forEach(element => {
+                const [rows = "100", columns = "100", gaps = "0-0"] = element.getAttribute("data-grid").split(" ");
+                element.style.display = "grid"; 
+                element.style.gridTemplateRows = rows.split("-").map(item => `${item}%`).join(" ");
+                element.style.gridTemplateColumns = columns.split("-").map(item => `${item}%`).join(" ");
+                element.style.gap = gaps.split("-").map(item => `${item}%`).join(" ");
+            });
+            
+            const placeKey = {"s": "start", "c": "center", "e": "end", "t": "stretch"};
+            document.querySelectorAll("[data-grid] > [data-place]").forEach(element => {
+                const [row = "0-0", column = "0-0", place = "t-t"] = element.getAttribute("data-place").split(" ");
+                element.style.gridRow = row.split("-").join(" / ");
+                element.style.gridColumn = column.split("-").join(" / ");
+                element.style.placeSelf = place.split("-").map(item => placeKey[item]).join(" ");
+            });
+            
+            const directionKey = {"r": "row", "c": "column"};
+            const flexKey = {"s": "flex-start", "c": "center", "e": "flex-end", "sb": "space-between", "se": "space-evenly", "sa": "space-around", "t": "stretch", "b": "baseline"};
+            document.querySelectorAll("[data-flex]").forEach(element => {
+                const [direction = "r", place = "fs-t", gap = "0"] = element.getAttribute("data-flex").split(" ");
+                element.style.display = "flex";
+                element.style.flexDirection = `${directionKey[direction]}`;
+                const [justify = "fs", align = "t"] = place.split("-");
+                element.style.justifyContent = `${flexKey[justify]}`;
+                element.style.alignItems = `${flexKey[align]}`;
+                element.style.gap = `${gap}%`;
+                element.style.overflow = "auto";
+            });
+            
+            document.querySelectorAll("[data-flex] *").forEach(element => {
+                element.style.minHeight = "min-content";
+            });
+            
+            document.querySelectorAll("[data-edge]").forEach(element => {
+                const [margin = "0", border = "0", radius = "0", padding = "0", color = "var(--color)"] = element.getAttribute("data-edge").split(" ");
+                element.style.margin = `${margin}rem`;
+                element.style.border = `${border}rem solid ${color}`;
+                element.style.borderRadius = `${radius}rem`;
+                element.style.padding = `${padding}rem`;
+            });
+            
+            document.querySelectorAll("[data-colors]").forEach(element => {
+               const [background = "#ffffff", text = "#000000"] = element.getAttribute("data-colors").split(" ");
+               element.style.backgroundColor = `${background}`;
+               element.style.color = `${text}`;
+            });
+            
+            const alignKey = {"l": "left", "c": "center", "r": "right", "j": "justify"};
+            document.querySelectorAll("[data-font]").forEach(element => {
+                const [size = "1", weight = "n", color = "#000000", align = "c"] = element.getAttribute("data-font").split(" ");
+                element.style.fontSize = `${size}rem`;
+                element.style.fontWeight = `${weight}`;
+                element.style.color = `${color}`;
+                element.style.textAlign = `${alignKey[align]}`;
+            });
+            
+            let hoverCount = 0;
+            document.querySelectorAll("[data-hover]").forEach(element => {
+                hoverCount += 1;
+                element.classList.add(`hover${hoverCount}`);
+                const style = getComputedStyle(element);
+                const [width = style.borderWidth, border = style.borderColor, background = style.backgroundColor, text = style.color] = element.getAttribute("data-hover").split(" ");
+                const sheet = document.styleSheets[0];
+                sheet.insertRule(`.hover${hoverCount}:hover { border: ${width}rem solid ${border} !important; background-color: ${background} !important; color: ${text} !important; cursor: pointer; }`, sheet.cssRules.length);
+            });
+            
+            let activeCount = 0;
+            document.querySelectorAll("[data-active]").forEach(element => {
+                activeCount += 1;
+                element.classList.add(`active${activeCount}`);
+                const style = getComputedStyle(element);
+                const [width = style.borderWidth, border = style.borderColor, background = style.backgroundColor, text = style.color] = element.getAttribute("data-active").split(" ");
+                const sheet = document.styleSheets[0];
+                sheet.insertRule(`.active${activeCount}:active { border: ${width}rem solid ${border} !important; background-color: ${background} !important; color: ${text} !important; }`, sheet.cssRules.length);
+            });
+            
+            let focusCount = 0;
+            document.querySelectorAll("[data-focus]").forEach(element => {
+                focusCount += 1;
+                element.classList.add(`focus${focusCount}`);
+                const style = getComputedStyle(element);
+                const [width = style.borderWidth, border = style.borderColor, background = style.backgroundColor, text = style.color] = element.getAttribute("data-focus").split(" ");
+                const sheet = document.styleSheets[0];
+                sheet.insertRule(`.focus${focusCount}:focus { border: ${width}rem solid ${border} !important; background-color: ${background} !important; color: ${text} !important; }`, sheet.cssRules.length);
+            });
+            
+            document.querySelectorAll("[data-state]").forEach(element => {
+                element.onclick = function() {
+                    if (element.getAttribute("data-state") == "off") {
+                        element.setAttribute("data-state", "on");
+                        element.style.backgroundColor = "var(--color)";
+                    } else if (element.getAttribute("data-state") == "on") {
+                        element.setAttribute("data-state", "off");
+                        element.style.backgroundColor = "white";
+                    }
+                }
+            });
+
+            let wps = 4;
+
+            document.querySelector("input[type='color']").onchange = function() {
+                const colorPicker = document.querySelector("input[type='color']");
+                const colorValue = colorPicker.value;
+                document.documentElement.style.setProperty('--color', colorValue);
+            }
+
+            document.querySelector("input[type='number']").onchange = function() {
+                const num = document.querySelector("input[type='number']").value;
+                if (num <= 0) {
+                    wps = 0.01;
+                } else {
+                    wps = num;
+                }
+            }
+
+            document.querySelector("#KeyButton").onclick = function() {
+                if (getComputedStyle(document.querySelector("#KeyModal")).getPropertyValue("visibility") == "visible") {
+                    document.querySelector("#KeyModal").style.visibility = "hidden";
+                } else {
+                    document.querySelector("#KeyModal").style.visibility = "visible";
+                }
+            }
+
+            document.querySelector("#RulesButton").onclick = function() {
+                if (getComputedStyle(document.querySelector("#RulesModal")).getPropertyValue("visibility") == "visible") {
+                    document.querySelector("#RulesModal").style.visibility = "hidden";
+                } else {
+                    document.querySelector("#RulesModal").style.visibility = "visible";
+                }
+            }
+
+            document.querySelector("#ResetButton").onclick = function() {
+                document.querySelector("#score1").innerHTML = "0/0/0";
+                document.querySelector("#score2").innerHTML = "(0 seen),";
+                document.querySelector("#score3").innerHTML = "0 pts,";
+                document.querySelector("#score4").innerHTML = "celerity 0.000";
+                powers = 0;
+                tens = 0;
+                negs = 0;
+                seen = 0;
+                celerity = 0;
+                reset = true;
+            }
+
+            function updateScore() {
+                document.querySelector("#score1").innerHTML = `${powers}/${tens}/${negs}`;
+                document.querySelector("#score2").innerHTML = `(${seen} seen),`;
+                document.querySelector("#score3").innerHTML = `${powers * 15 + tens * 10 - (negs * 5)} pts,`;
+                if (questionRight) {
+                    celerity = (celerity * (seen - 1) + (1 - buzzNum / questionLength)) / seen;
+                }
+                document.querySelector("#score4").innerHTML = `celerity ${celerity.toFixed(3)}`;
+            }
+
+            function runGoogleScriptFunction(fn, ...args) {
+                return new Promise((resolve, reject) => {
+                    google.script.run
+                    .withSuccessHandler((result) => {
+                        resolve(result);
+                    })
+                    .withFailureHandler((error) => {
+                        reject(error);
+                    })[fn](...args);
+                });
+            }
+
+            function normalizedLevenshtein(a, b) {
+                if (!/ /.test(a) && / /.test(b)) {
+                    let minVal = Infinity;
+                    let newB = b.split(/ /);
+                    let actB;
+                    for (let i = 0; i < newB.length; i++) {
+                        let dist = normalizedLevenshtein(a, newB[i]);
+                        if (dist < minVal) {
+                            minVal = dist;
+                            actB = newB[i];
+                        }
+                    }
+                    const average = (a.length + actB.length) / 2;
+                    return minVal / average;
+                }
+                const matrix = [];
+
+                for (let i = 0; i <= a.length; i++) {
+                    matrix[i] = [i];
+                }
+                for (let j = 0; j <= b.length; j++) {
+                    matrix[0][j] = j;
+                }
+
+                for (let i = 1; i <= a.length; i++) {
+                    for (let j = 1; j <= b.length; j++) {
+                        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j - 1] + cost
+                        );
+                    }
+                }
+
+                const error = matrix[a.length][b.length];
+                const average = (a.length + b.length) / 2;
+                return error / average;
+            }
+
+            function getParameters() {
+                let keywords = document.querySelector("#KeywordInput").value;
+                let keywordsArr;
+                if (keywords == "") {
+                    keywordsArr = [];
+                } else {
+                    keywordsArr = keywords.split(/,/).map(x => x.trim());
+                }
+                let difficulties = [];
+                for (let i = 0; i < 11; i++) {
+                    let on = document.querySelector(`#diff${i} div`).getAttribute("data-state");
+                    if (on == "on") {
+                        difficulties.push(i);
+                    }
+                }
+                let categories = [];
+                for (let i = 1; i < 13; i++) {
+                    let on = document.querySelector(`#cat${i} div`).getAttribute("data-state");
+                    if (on == "on") {
+                        categories.push(document.querySelector(`#cat${i} p`).innerHTML);
+                    }
+                }
+                return [keywordsArr, difficulties, categories];
+            }
+
+            let state = "start";
+
+            let question;
+            let backup;
+            let answer;
+            let questionLength;
+            let buzzNum;
+            let powermarked;
+            let powerNum;
+            let noBuzz;
+
+            let powers = 0;
+            let tens = 0;
+            let negs = 0;
+            let seen = 0;
+            let celerity = 0;
+            let reset = true;
+
+            let buzzedEarly = false;
+            let questionRight = false;
+
+            document.querySelector("#SubmitAnswer").onclick = function() {
+                if (state == "start" || state == "answer" || state == "invalid") {
+                    state = "getting";
+                    document.querySelector("#loading").style.visibility = "visible";
+                    document.querySelector("#QuestionDisplay").innerHTML = "";
+                    document.querySelector("#AnswerDisplay").innerHTML = "";
+                    buzzedEarly = false;
+                    questionRight = false;
+                    noBuzz = false;
+                    let parameters = getParameters();
+                    runGoogleScriptFunction("getQBReaderQuestion", ...parameters)
+                    .then(result => {
+                        let questionArray = result["tossups"]["questionArray"];
+                        if (questionArray.length == 1) {
+                            document.querySelector("#CategoryDisplay").innerHTML = questionArray[0]["category"] + ", " + questionArray[0]["difficulty"];
+                            question = questionArray[0]["question_sanitized"].split(" ");
+                            backup = questionArray[0]["question_sanitized"].split(" ");
+                            answer = questionArray[0]["answer_sanitized"];
+                            if (question.length == 0) {
+                                document.querySelector("#CategoryDisplay").innerHTML = "Error, N/A";
+                                document.querySelector("#QuestionDisplay").innerHTML = "Your keywords did not match any questions. Please revise your keywords, difficulties, and categories and try again.";
+                                document.querySelector("#AnswerDisplay").innerHTML = "N/A";
+                                document.querySelector("#loading").style.visibility = "hidden";
+                                state = "invalid";
+                            } else {
+                                questionLength = question.length;
+                                if (question.includes("(*)")) {
+                                    powermarked = true;
+                                    powerNum = question.indexOf("(*)");
+                                } else {
+                                    powermarked = false;
+                                }
+                                document.querySelector("#SubmitAnswer").innerHTML = "Buzz";
+                                document.querySelector("#RevealButton").innerHTML = "Skip";
+                                document.querySelector("#IWasRightButton").innerHTML = "Pause";
+                                document.querySelector("#loading").style.visibility = "hidden";
+                                state = "reading";
+                                reading();
+                            }
+                            
+                        } else {
+                            document.querySelector("#CategoryDisplay").innerHTML = "Error, N/A";
+                            document.querySelector("#QuestionDisplay").innerHTML = "Your keywords did not match any questions. Please revise your keywords, difficulties, and categories and try again.";
+                            document.querySelector("#AnswerDisplay").innerHTML = "N/A";
+                            document.querySelector("#loading").style.visibility = "hidden";
+                            state = "invalid";
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        document.querySelector("#CategoryDisplay").innerHTML = "Error, N/A";
+                        document.querySelector("#QuestionDisplay").innerHTML = "Your keywords did not match any questions. Please revise your keywords, difficulties, and categories and try again.";
+                        document.querySelector("#AnswerDisplay").innerHTML = "N/A";
+                        document.querySelector("#loading").style.visibility = "hidden";
+                        state = "invalid";
+                    });
+                } else if (state == "reading") {
+                    state = "buzz";
+                    document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + "(#) ";
+                    document.querySelector("#SubmitAnswer").innerHTML = "Submit";
+                    document.querySelector("#TypeAnswer").focus();
+                    buzzedEarly = true;
+                    buzzNum = questionLength - question.length;
+                } else if (state == "done") {
+                    state = "buzz";
+                    document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + "(#) ";
+                    document.querySelector("#SubmitAnswer").innerHTML = "Submit";
+                    document.querySelector("#TypeAnswer").focus();
+                    document.querySelector("#TypeAnswer").clear();
+                    buzzedEarly = false;
+                    buzzNum = questionLength;
+                } else if (state == "buzz") {
+                    let guess = document.querySelector("#TypeAnswer").value.trim();
+                    let check;
+                    if (/[[({]/.test(answer)) {
+                        check = answer.split(/[[({]/)[0].trim();
+                    } else {
+                        check = answer.trim();
+                    }
+                    document.querySelector("#TypeAnswer").value = "";
+                    document.querySelector("#SubmitAnswer").innerHTML = "Next";
+                    document.querySelector("#RevealButton").innerHTML = "Reveal";
+                    document.querySelector("#TypeAnswer").blur();
+                    if (!powermarked) {
+                        for (let i = 0; i < question.length; i++) {
+                            document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + question[i] + " ";
+                        }
+                    } else {
+                        backup.splice(buzzNum, 0, "(#) ");
+                        if (buzzNum <= powerNum) {
+                            powerNum++;
+                        }
+                        document.querySelector("#QuestionDisplay").innerHTML = "";
+                        for (let i = 0; i < powerNum; i++) {
+                            document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + "<strong>" + backup[i] + "</strong> ";
+                        }
+                        for (let i = powerNum; i < backup.length; i++) {
+                            document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + backup[i] + " ";
+                        }
+                    }
+                    seen++;
+                    reset = false;
+                    if (normalizedLevenshtein(guess, check) < 0.2) {
+                        questionRight = true;
+                        if (powermarked && buzzNum <= powerNum) {
+                            powers++;
+                        } else {
+                            tens++;
+                        }
+                        updateScore();
+                        document.querySelector("#IWasRightButton").innerHTML = "I Was Wrong";
+                    } else {
+                        questionRight = false;
+                        if (buzzedEarly) {
+                            negs++;
+                        }
+                        updateScore();
+                        document.querySelector("#IWasRightButton").innerHTML = "I Was Right";
+                    }
+                    document.querySelector("#AnswerDisplay").innerHTML = answer;
+                    state = "answer";
+                }
+            }
+
+            document.querySelector("#RevealButton").onclick = function() {
+                if (state == "done") {
+                    document.querySelector("#AnswerDisplay").innerHTML = answer;
+                    document.querySelector("#IWasRightButton").innerHTML = "I Was Right";
+                    buzzNum = questionLength;
+                    noBuzz = true;
+                    state = "answer";
+                } if (state == "reading" || state == "pause") {
+                    state = "start";
+                    document.querySelector("#SubmitAnswer").click();
+                }
+            }
+
+            document.querySelector("#IWasRightButton").onclick = function() {
+                if (state == "answer" && !noBuzz) {
+                    if (!reset) {
+                        if (questionRight) {
+                            if (powermarked && buzzNum <= powerNum) {
+                                powers--;
+                            } else {
+                                tens--;
+                            }
+                            if (buzzedEarly) {
+                                negs++;
+                            }
+                            questionRight = false;
+                            updateScore();
+                            document.querySelector("#IWasRightButton").innerHTML = "I Was Right";
+                        } else {
+                            if (buzzedEarly) {
+                                negs--;
+                            }
+                            if (powermarked && buzzNum <= powerNum) {
+                                powers++;
+                            } else {
+                                tens++;
+                            }
+                            questionRight = true;
+                            updateScore();
+                            document.querySelector("#IWasRightButton").innerHTML = "I Was Wrong";
+                        }
+                    }
+                } else if (state == "reading") {
+                    state = "pause";
+                    document.querySelector("#IWasRightButton").innerHTML = "Resume";
+                } else if (state == "pause") {
+                    state = "reading";
+                    document.querySelector("#IWasRightButton").innerHTML = "Pause";
+                    reading();
+                }
+            }
+
+            document.onkeydown = function(e) {
+                if (document.activeElement.nodeName != "TEXTAREA" && document.activeElement.nodeName != "INPUT") {
+                    if (e.code == "Space") {
+                        if (state == "reading" || state == "done") {
+                            document.querySelector("#SubmitAnswer").click();
+                        }
+                    } else if (e.code == "KeyN") {
+                        if (state == "start" || state == "invalid" || state == "answer") {
+                            document.querySelector("#SubmitAnswer").click();
+                        }
+                    } else if (e.code == "KeyR") {
+                        if (state == "answer") {
+                            document.querySelector("#IWasRightButton").click();
+                        } else if (state == "done") {
+                            document.querySelector("#RevealButton").click();
+                        }
+                    } else if (e.code == "KeyS") {
+                        if (state == "reading" || state == "pause" || state == "done") {
+                            document.querySelector("#RevealButton").click();
+                        }
+                    } else if (e.code == "KeyP") {
+                        if (state == "reading" || state == "pause") {
+                            document.querySelector("#IWasRightButton").click();
+                        }              
+                    } else if (e.code == "KeyK") {
+                        document.querySelector("#KeyButton").click();
+                    } else if (e.code == "KeyL") {
+                        document.querySelector("#RulesButton").click();
+                    }
+                }
+                if (e.code == "Enter") {
+                    if (state == "buzz") {
+                        document.querySelector("#SubmitAnswer").click();
+                    }
+                }
+            }
+
+            function reading() {
+                if (state == "reading") {
+                    document.querySelector("#QuestionDisplay").innerHTML = document.querySelector("#QuestionDisplay").innerHTML + question[0] + " ";
+                    question.shift();
+                    if (question.length == 0) {
+                        document.querySelector("#RevealButton").innerHTML = "Reveal";
+                        state = "done";
+                    } else {
+                        setTimeout(reading, 1000 / wps);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
